@@ -7,6 +7,7 @@ const Chart = ({ data, settings }) => {
     const canvas = canvasRef.current;
     const ctx = canvas.getContext('2d');
 
+    const padding = 20;
     canvas.width = window.innerWidth;
     canvas.height = 600;
 
@@ -17,10 +18,10 @@ const Chart = ({ data, settings }) => {
     const axisMarginPerAxis = 70;
     const activeVerticalAxes = settings.filter(setting => setting.visible).length;
     const totalAxisMargin = axisMarginPerAxis * activeVerticalAxes;
-    const chartWidth = canvas.width - margin - totalAxisMargin;
+    const chartWidth = canvas.width - margin - totalAxisMargin - padding;
     const chartHeight = canvas.height - 2 * margin;
-    const xStep = chartWidth / (data.length - 1);
-    const maxValue = Math.max(...data.map(d => Math.max(...settings.filter(s => s.visible && !s.individualAxis).map(s => d[s.key]))));
+    const xStep = chartWidth / (data?.length - 1);
+    const maxValue = Math.max(...data?.map(d => Math.max(...settings.filter(s => s.visible && !s.individualAxis).map(s => d[s.key]))));
     const yRatio = chartHeight / maxValue;
     const chartStartX = totalAxisMargin + margin;
 
@@ -28,7 +29,7 @@ const Chart = ({ data, settings }) => {
       ctx.strokeStyle = color;
       ctx.lineWidth = 2;
       ctx.beginPath();
-      data.forEach((point, index) => {
+      data?.forEach((point, index) => {
         const x = chartStartX + index * xStep;
         const y = canvas.height - margin - point[key] * yRatio;
         if (index === 0) {
@@ -55,7 +56,7 @@ const Chart = ({ data, settings }) => {
       settings.forEach((setting, index) => {
         if (setting.visible) {
           const color = ['#ff6347', '#4682b4', '#32cd32', '#ff69b4', '#ffa500'][index % 5];
-          const individualMaxValue = Math.max(...data.map(d => d[setting.key]));
+          const individualMaxValue = Math.max(...data?.map(d => d[setting.key]));
           const individualYRatio = chartHeight / individualMaxValue;
           const axisX = margin + offsetX;
 
@@ -89,14 +90,14 @@ const Chart = ({ data, settings }) => {
     const drawText = () => {
       const textHeight = 20;
       const maxLabels = Math.floor(chartWidth / textHeight);
-      const interval = Math.max(1, Math.floor(data.length / maxLabels));
+      const interval = Math.max(1, Math.floor(data?.length / maxLabels));
 
       ctx.fillStyle = '#000';
       ctx.font = '14px Arial';
       ctx.textAlign = 'center';
       ctx.textBaseline = 'middle';
 
-      data.forEach((point, index) => {
+      data?.forEach((point, index) => {
         if (index % interval === 0) {
           const x = chartStartX + index * xStep;
           const [month, year] = point["Месяц,год"].split('.');
@@ -118,7 +119,7 @@ const Chart = ({ data, settings }) => {
     settings.forEach((setting, index) => {
       if (setting.visible) {
         const color = ['#ff6347', '#4682b4', '#32cd32', '#ff69b4', '#ffa500'][index % 5];
-        const individualMaxValue = Math.max(...data.map(d => d[setting.key]));
+        const individualMaxValue = Math.max(...data?.map(d => d[setting.key]));
         const individualYRatio = chartHeight / individualMaxValue;
         drawLine(data, setting.key, color, setting.individualAxis ? individualYRatio : yRatio);
       }
