@@ -44,13 +44,13 @@ export const drawVerticalAxes = (ctx, settings, data, chartHeight, margin, yRati
 
       ctx.fillStyle = color;
       ctx.font = '12px Arial';
-      ctx.textAlign = 'right';
-      ctx.fillText(setting.label, axisX - 5, margin - 10);
+      ctx.textAlign = 'left';
+      ctx.fillText(setting.label, axisX, margin - 10);
 
-      for (let i = ZERO; i <= 5; i++) {
-        const yValue = individualMaxValue / 5 * i;
+      for (let i = ZERO; i <= settings.length; i++) {
+        const yValue = individualMaxValue / settings.length * i;
         const y = canvasHeight - margin - yValue * (setting.individualAxis ? individualYRatio : yRatio);
-        ctx.fillText(yValue.toFixed(2), axisX - 5, y + 3);
+        ctx.fillText(yValue.toFixed(2), axisX + 10, y + 5);
         ctx.beginPath();
         ctx.moveTo(axisX, y);
         ctx.lineTo(axisX + 5, y);
