@@ -10,7 +10,7 @@ const Chart = ({ data, settings }) => {
     canvas.width = window.innerWidth;
     canvas.height = 600;
 
-    ctx.fillStyle = '#f5f5f5';
+    ctx.fillStyle = '#fff';
     ctx.fillRect(0, 0, canvas.width, canvas.height);
 
     const margin = 100;
