@@ -22,13 +22,14 @@ const Chart = ({ data, settings }) => {
     const xStep = chartWidth / (data.length - 1);
     const maxValue = Math.max(...data.map(d => Math.max(...settings.filter(s => s.visible && !s.individualAxis).map(s => d[s.key]))));
     const yRatio = chartHeight / maxValue;
+    const chartStartX = totalAxisMargin + margin;
 
     const drawLine = (data, key, color, yRatio) => {
       ctx.strokeStyle = color;
       ctx.lineWidth = 2;
       ctx.beginPath();
       data.forEach((point, index) => {
-        const x = margin + index * xStep;
+        const x = chartStartX + index * xStep;
         const y = canvas.height - margin - point[key] * yRatio;
         if (index === 0) {
           ctx.moveTo(x, y);
@@ -43,9 +44,9 @@ const Chart = ({ data, settings }) => {
       ctx.strokeStyle = '#000';
       ctx.lineWidth = 1;
       ctx.beginPath();
-      ctx.moveTo(margin, margin);
-      ctx.lineTo(margin, canvas.height - margin);
-      ctx.lineTo(margin + chartWidth, canvas.height - margin);
+      ctx.moveTo(chartStartX, margin);
+      ctx.lineTo(chartStartX, canvas.height - margin);
+      ctx.lineTo(chartStartX + chartWidth, canvas.height - margin);
       ctx.stroke();
     };
 
@@ -56,7 +57,7 @@ const Chart = ({ data, settings }) => {
           const color = ['#ff6347', '#4682b4', '#32cd32', '#ff69b4', '#ffa500'][index % 5];
           const individualMaxValue = Math.max(...data.map(d => d[setting.key]));
           const individualYRatio = chartHeight / individualMaxValue;
-          const axisX = margin - 70 - offsetX;
+          const axisX = margin + offsetX;
 
           ctx.strokeStyle = color;
           ctx.lineWidth = 1;
@@ -68,7 +69,7 @@ const Chart = ({ data, settings }) => {
           ctx.fillStyle = color;
           ctx.font = '12px Arial';
           ctx.textAlign = 'right';
-          ctx.fillText(setting.label, axisX - 10, margin - 10);
+          ctx.fillText(setting.label, axisX - 5, margin - 10);
 
           for (let i = 0; i <= 5; i++) {
             const yValue = individualMaxValue / 5 * i;
@@ -97,14 +98,14 @@ const Chart = ({ data, settings }) => {
 
       data.forEach((point, index) => {
         if (index % interval === 0) {
-          const x = margin + index * xStep;
+          const x = chartStartX + index * xStep;
           const [month, year] = point["Месяц,год"].split('.');
           const dateStr = new Date(year, month - 1).toLocaleString('ru', { month: 'long', year: 'numeric' });
 
           ctx.save();
-          ctx.translate(x, canvas.height + 10);
+          ctx.translate(x, canvas.height - margin + 10);
           ctx.rotate(Math.PI / 2);
-          ctx.textAlign = 'right';
+          ctx.textAlign = 'left';
           ctx.fillText(dateStr, 0, 0);
           ctx.restore();
         }
